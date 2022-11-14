@@ -1,6 +1,10 @@
 # ReinoTrebolUI
 Interfaz de usuario para sistema Reino de Trebol, este sistema es una aplicacion WEB, que permite interactuar con el API de Reino del Trebol. Por el momento solo permite visualizar las solicitudes registradas, editar el estado de cada solicitud,
 
+# Pre-requisitos 
+
+  * Angular 14 
+ 
 # Instalacion
 1. Clona este repositorio en local:
 
@@ -25,3 +29,13 @@ npm install
 ```console
 ng serve
 ```
+# Configuracion
+
+* El proyecto esta compuesto de los seguientes directorios:
+
+![image](https://user-images.githubusercontent.com/87883786/201618460-c8dec7c4-aaa9-492b-8b83-54dfe5846460.png)
+
+
+# Autores 
+  
+  Holman Sanchez Fuentes
