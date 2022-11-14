@@ -1,5 +1,5 @@
 # ReinoTrebolUI
-Interfaz de usuario para el sistema Reino del Trebol. Esta interfaz es una aplicacion WEB construida con el freamwork Angular e IDE Visutal Studio Code, que permite consumir la API de Reino del Trebol. Por el momento solo permite visualizar las solicitudes registradas, editar el estado de cada solicitud,
+Interfaz de usuario para el sistema Reino del Trebol. Esta interfaz es una aplicacion WEB construida con el freamwork Angular e IDE Visutal Studio Code, que permite consumir la API de Reino del Trebol. Por el momento solo permite visualizar las solicitudes registradas y editar el estado de cada solicitud.
 
 # Pre-requisitos 
 
