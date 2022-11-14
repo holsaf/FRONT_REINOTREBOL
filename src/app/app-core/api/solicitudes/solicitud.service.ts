@@ -1,9 +1,10 @@
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
+import { compare } from 'fast-json-patch';
 import { environment } from 'src/environments/environment'
-import { Solicitudes } from '../../models/solicitud';
+import { Solicitud, Solicitudes } from '../../models/solicitud';
 import { ApiModel } from './solicitud.api.models';
 
 
@@ -28,6 +29,29 @@ export class SolicitudService {
         map(ApiModel.SolicitudCollection.toModel)
         );
    
+  }
+
+  public updateSolicitud(modifiedSolicitud : Solicitud , currentSolicitud: Solicitud): Observable<Solicitud> {
+    const apiCurrentSolicitud = ApiModel.Solicitud.fromModel(currentSolicitud);
+    const apiModifiedSolicitud = ApiModel.Solicitud.fromModel(modifiedSolicitud);
+    const operations = compare(apiCurrentSolicitud, apiModifiedSolicitud);
+
+    if (operations.length === 0) {
+      return of(modifiedSolicitud);
+    }
+
+    return this._http
+      .patch<ApiModel.Solicitud>(
+        `${this._baseUrl}/${currentSolicitud.idSolicitud}`,
+        operations,
+        {
+          headers: new HttpHeaders()
+            .set('Content-Type', 'application/json-patch+json')
+            .set('Accept', 'application/json')
+        })
+      .pipe(
+        map(ApiModel.Solicitud.toModel),
+      );
   }
 
 }

@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject, switchMap, takeUntil } from 'rxjs';
+import { Subject, switchMap} from 'rxjs';
 import { SolicitudService } from '../app-core/api/solicitudes/solicitud.service';
-import { AfinidadMagica } from '../app-core/models/enums/afinidadMagica';
-import { EstadoSolicitud } from '../app-core/models/enums/estadoSolicitud';
-import { GrimorioType } from '../app-core/models/enums/grimorioType';
+import { EstadoSolicitud, valuesEstadoSolicitud } from '../app-core/models/enums/estadoSolicitud';
 import { Solicitud, Solicitudes } from '../app-core/models/solicitud';
 
 @Component({
@@ -14,27 +12,22 @@ import { Solicitud, Solicitudes } from '../app-core/models/solicitud';
 })
 export class SolicitudListComponent implements OnInit {
 
-  public displayedColumns = ['nombre', 'apellido', 'edad' , 'identificacion' , 'estado', 'grimorio' ,'afinidad', 'edit'];
+  public displayedColumns = ['nombre', 'apellido', 'edad', 'identificacion', 'estado', 'cambiarEstado', 'grimorio', 'afinidad', 'edit'];
   public dataSource: MatTableDataSource<Solicitud> = new MatTableDataSource<Solicitud>();
   private _getSolicitud$: Subject<void> = new Subject<void>();
-  public listSol: Solicitud[] = [];
-  public solExample = new Solicitud({
-    nombre: 'holman',
-    apellido: 'sanchez',
-    edad: '12',
-    identificacion: '1045210',
-    estado: EstadoSolicitud.Aprobada,
-    grimorio: GrimorioType.Sinceridad,
-    afinidadMagica : AfinidadMagica.Fuego
-  })
+  private _patchSolicitud$: Subject<void> = new Subject<void>();
+  public estados = valuesEstadoSolicitud;
+  public initialSolicitudes: Solicitud[] = [];
+  public modifiedSolicitud!: Solicitud;
+  public currentSolicitud!: Solicitud;
 
   constructor(private _solicitudService: SolicitudService) { }
 
   public ngOnInit(): void {
     this.loadPage();
+    this.updateEstado();
     this._getSolicitud$.next();
-    //this.listSol.push(this.solExample);
-    //this.dataSource.data = this.listSol;
+    this.initialSolicitudes.push(...this.dataSource.data);
   }
 
   private loadPage(): void {
@@ -45,8 +38,32 @@ export class SolicitudListComponent implements OnInit {
     });
   }
 
+  private updateEstado(): void {
+    this._patchSolicitud$.pipe(
+      switchMap(() => this._solicitudService.updateSolicitud(this.modifiedSolicitud, this.currentSolicitud))
+    ).subscribe(solicitud => {
+      console.log(solicitud)
+      this.dataSource.data = this.dataSource.data.map((sol, i) => sol.idSolicitud == solicitud?.idSolicitud ? solicitud : sol);
+    });
+  }
+
   private loadDataSource(solicitudes: Solicitudes): void {
     this.dataSource.data = solicitudes.solicitudes;
+    this.initialSolicitudes.push(...solicitudes.solicitudes);
+  }
+
+  public changeEstado(estado: string | EstadoSolicitud, data: Solicitud): void {
+    let isInvalid = (estado === data.estado);
+    if (!isInvalid) {
+      this.modifiedSolicitud = this.dataSource.data.find(sol => sol.idSolicitud == data.idSolicitud)!;
+      if (this.modifiedSolicitud != undefined) {
+
+        this.currentSolicitud = Solicitud.copyTo(this.initialSolicitudes.find(sol => sol.idSolicitud == data.idSolicitud)!);
+        this.modifiedSolicitud.estado = <EstadoSolicitud>estado;
+      }
+      this._patchSolicitud$.next();
+    }
+
   }
 
 }
