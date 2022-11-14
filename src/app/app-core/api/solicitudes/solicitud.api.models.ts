@@ -2,7 +2,7 @@ import { AfinidadMagica } from 'src/app/app-core/models/enums/afinidadMagica'
 import { EstadoSolicitud  } from 'src/app/app-core/models/enums/estadoSolicitud'
 import { GrimorioType } from 'src/app/app-core/models/enums/grimorioType'
 import {
-    Solicitud as ModelSolicitud
+    Solicitud as ModelSolicitud, Solicitudes
 } from "../../models/solicitud";
 
 
@@ -75,7 +75,13 @@ export namespace ApiModel {
 
 
 
-    export interface SolicitudCollection {
-        solicitudes : Solicitud[];
+    export class SolicitudCollection {
+        public solicitudes! : Solicitud[];
+
+        public static toModel(solicitud : SolicitudCollection ): Solicitudes {
+            return new Solicitudes ({
+                solicitudes : solicitud.solicitudes.map(ApiModel.Solicitud.toModel)
+            })
+        };
     }
 }

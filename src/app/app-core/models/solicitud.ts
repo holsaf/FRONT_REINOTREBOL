@@ -27,4 +27,9 @@ export class Solicitud {
 
 export class Solicitudes {
     public solicitudes! : Solicitud[];
+
+    public constructor(init?: Partial<Solicitudes>){
+        Object.assign(this, init);
+    }
+
 }

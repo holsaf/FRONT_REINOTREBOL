@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { HttpClientModule  } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { SolicitudActualizarComponent } from './solicitud-actualizar/solicitud-actualizar.component'; 
@@ -34,7 +35,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     MatTableModule,
     FormsModule, 
     ReactiveFormsModule,
-    MatFormFieldModule 
+    MatFormFieldModule ,
+    HttpClientModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]

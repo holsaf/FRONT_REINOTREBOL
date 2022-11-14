@@ -31,21 +31,22 @@ export class SolicitudListComponent implements OnInit {
   constructor(private _solicitudService: SolicitudService) { }
 
   public ngOnInit(): void {
-    //this.loadPage();
-    this.listSol.push(this.solExample);
-    this.dataSource.data = this.listSol;
+    this.loadPage();
+    this._getSolicitud$.next();
+    //this.listSol.push(this.solExample);
+    //this.dataSource.data = this.listSol;
   }
 
-  // private loadPage(): void {
-  //   this._getSolicitud$.pipe(
-  //     switchMap(() => this._solicitudService.getSolicitudes())
-  //   ).subscribe(solicitudes => {
-  //     this.loadDataSource(solicitudes);
-  //   });
-  // }
+  private loadPage(): void {
+    this._getSolicitud$.pipe(
+      switchMap(() => this._solicitudService.getSolicitudes())
+    ).subscribe(solicitudes => {
+      this.loadDataSource(solicitudes);
+    });
+  }
 
-  // private loadDataSource(solicitudes: Solicitudes): void {
-  //   this.dataSource.data = solicitudes.solicitudes;
-  // }
+  private loadDataSource(solicitudes: Solicitudes): void {
+    this.dataSource.data = solicitudes.solicitudes;
+  }
 
 }

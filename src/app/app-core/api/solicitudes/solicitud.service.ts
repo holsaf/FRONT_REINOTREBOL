@@ -1,7 +1,7 @@
 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment'
 import { Solicitudes } from '../../models/solicitud';
 import { ApiModel } from './solicitud.api.models';
@@ -24,7 +24,10 @@ export class SolicitudService {
         {
           headers
         })
-      .pipe();     
+      .pipe(
+        map(ApiModel.SolicitudCollection.toModel)
+        );
+   
   }
 
 }
